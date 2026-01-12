@@ -1,0 +1,58 @@
+import pygame,sys
+from random import choice
+pygame.init()
+T=30; C=R=20
+S=pygame.display.set_mode((C*T,R*T))
+pygame.display.set_caption("Maze Solver")
+clk=pygame.time.Clock()
+class Cell:
+    def __init__(s,x,y): s.x,s.y=x,y; s.w=[1]*4; s.v=0
+    def d(s):
+        x,y=s.x*T,s.y*T
+        L=[((x,y),(x+T,y)),((x+T,y),(x+T,y+T)),
+           ((x+T,y+T),(x,y+T)),((x,y+T),(x,y))]
+        for i,l in enumerate(L):
+            if s.w[i]: pygame.draw.line(S,(0,255,0),*l,2)
+g=[Cell(x,y) for y in range(R) for x in range(C)]
+def maze():
+    c=g[0]; st=[]
+    while 1:
+        c.v=1
+        n=[]
+        for dx,dy,i in [(0,-1,0),(1,0,1),(0,1,2),(-1,0,3)]:
+            nx,ny=c.x+dx,c.y+dy
+            if 0<=nx<C and 0<=ny<R:
+                k=g[nx+ny*C]
+                if not k.v: n.append((k,i))
+        if n:
+            k,i=choice(n)
+            c.w[i]=0; k.w[(i+2)%4]=0
+            st.append(c); c=k
+        elif st: c=st.pop()
+        else: return
+
+sol=[]
+def solve():
+    st=[g[0]]; p={}; v=set()
+    while st:
+        c=st.pop()
+        if c==g[-1]:
+            while c in p: sol.append(c); c=p[c]
+            sol.append(g[0]); return
+        v.add(c)
+        for dx,dy,i in [(0,-1,0),(1,0,1),(0,1,2),(-1,0,3)]:
+            if c.w[i]==0:
+                n=g[(c.x+dx)+(c.y+dy)*C]
+                if n not in v: p[n]=c; st.append(n)
+maze(); solve()
+while 1:
+    S.fill((20,20,20))
+    for c in g: c.d()
+    for i in range(len(sol)-1):
+        a,b=sol[i],sol[i+1]
+        pygame.draw.line(S,(255,0,0),
+            (a.x*T+T//2,a.y*T+T//2),
+            (b.x*T+T//2,b.y*T+T//2),4)
+    pygame.display.flip(); clk.tick(60)
+    for e in pygame.event.get():
+        if e.type==pygame.QUIT: pygame.quit(); sys.exit()
