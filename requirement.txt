@@ -1,0 +1,27 @@
+SETUP INSTRUCTIONS FOR MAZE SOLVER USING PYGAME
+Step 1: Install Python
+Download and install Python (version 3.10 or above) from the official website:
+https://www.python.org/downloads/
+Make sure to check the box:
+[✓] Add Python to PATH
+
+Step 2: Create a Virtual Environment
+Open a terminal or command prompt and go to your project folder, then run:
+For Windows:
+python -m venv venv
+venv\Scripts\activate
+For macOS/Linux:
+python3 -m venv venv
+source venv/bin/activate
+
+Step 3: Upgrade pip (recommended)
+pip install --upgrade pip
+
+Step 4: Install Required Dependencies
+Install the required Python libraries:
+pip install pygame
+
+
+Step 5: Run the Maze Solver Program
+After activating the virtual environment, run the program: 
+python maze_solver.py
